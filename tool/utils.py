@@ -24,20 +24,23 @@ def read_path(classes, domains, filename):
 
     paths_dict = {domain: [] for domain in domains}
 
-    for cla in classes:
+    for cls in classes:
         for domain in domains:
-            paths_dict[domain] = paths_dict[domain] + glob.glob(f'./data/{filename}/{cla}/{domain}/*.jpg')
+            paths_dict[domain] = paths_dict[domain] + glob.glob(f'./data/{filename}/{cls}/{domain}/*.jpg')
 
     for domain in domains:
         random.shuffle(paths_dict[domain])
 
     classes_to_index = {cls: index for index, cls in enumerate(classes)}
+
     if platform.system() == "Windows":
         labels_dict = {domain: list(map(lambda path: classes_to_index.get(path.split('/')[-2]), paths_dict[domain])) for
                        domain in domains}
     else:
         labels_dict = {domain: list(map(lambda path: classes_to_index.get(path.split('/')[-3]), paths_dict[domain])) for
                        domain in domains}
+        # print(paths_dict['Sunny'][0])
+        # print(classes_to_index.get(paths_dict['Sunny'][10].split('/')[-3]))
     return paths_dict, labels_dict
 
 
@@ -61,11 +64,10 @@ class Dataset(torch.utils.data.Dataset):
 
 
 def criterion_CL(global_protos, features, labels, distance, args):
-    # pos
     criterion = torch.nn.CrossEntropyLoss().to(args.device)
 
-    global_protos_ = torch.cat(list(map(lambda c: global_protos[c].reshape(1, -1), range(args.num_classes))), dim=0)[
-        labels]
+    # pos
+    global_protos_ = torch.cat(list(map(lambda c: global_protos[c].reshape(1, -1), range(args.num_classes))), dim=0)[labels]
     posi = distance(features, global_protos_)
     logits = posi.reshape(-1, 1)
 
@@ -82,7 +84,7 @@ def criterion_CL(global_protos, features, labels, distance, args):
 
     # loss
     logits /= args.temperature
-    targets = torch.zeros(labels.size(0)).cuda().long()
+    targets = torch.zeros(labels.size(0)).to(args.device).long()
     loss = args.ld * criterion(logits, targets)
     return loss
 

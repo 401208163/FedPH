@@ -21,7 +21,7 @@ class args_parser():
         self.num_users = 5
         self.alg = 'fedph'  # local, fedph, fedproto, fedavg, fedprox
         self.train_ep = 1
-        self.local_bs = 4
+        self.local_bs = 16
         self.lr = 0.001
         self.momentum = 0.5
         self.weight_decay = 1e-4

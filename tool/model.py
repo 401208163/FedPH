@@ -9,7 +9,7 @@ import torchvision
 
 def if_not_backbone(args):
     if args.backbone == "resnet":
-        resnet = torchvision.models.resnet18(pretrained=True)
+        resnet = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.DEFAULT)
         modules = list(resnet.children())[:-1]
         backbone = torch.nn.Sequential(*modules)
         backbone = backbone.to(args.device)
