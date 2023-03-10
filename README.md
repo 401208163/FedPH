@@ -3,6 +3,25 @@ This is the code for paper [FedPH: Privacy-enhanced Heterogeneous Federated Lear
 
 **Abstract**: Federated Learning is a distributed machine-learning environment that allows clients to learn collaboratively without sharing private data. This is accomplished by exchanging parameters. However, the differences in data distributions and computing resources among clients make related studies difficult. To address these heterogeneous problems, we propose a novel Federated Learning method. Our method utilizes a pre-trained model as the backbone of the local model, with fully connected layers comprising the head. The backbone extracts features for the head, and the embedding vector of classes is shared between clients to improve the head and enhance the performance of the local model. By sharing the embedding vector of classes instead of gradient-based parameters, clients can better adapt to private data, and communication between the server and clients is more effective. To protect privacy, we propose a privacy-preserving hybrid method that adds noise to the embedding vector of classes. This method has a minimal effect on the performance of the local model when differential privacy is met. We conduct a comprehensive evaluation of our approach on a self-built vehicle dataset, comparing it with other Federated Learning methods under non-independent identically distributed(Non-IID).
 
+## Installation
+1. Install [Docker](https://www.docker.com/).
+2. Download [automated build](https://hub.docker.com/r/18580629860/fedph) from public [Docker Hub](https://hub.docker.com/):
+
+```bash
+docker pull 18580629860/fedph:1.1
+```
+
+3. Run
+
+```bash
+docker run -it --name fedph 18580629860/fedph:1.1 bash
+```
+
+4. excute
+```bash
+python main.py --rounds=25 --num_users=5 --alg=fedph
+```
+
 ## Dependencies
 * brotlipy==0.7.0 
 * certifi==2022.12.7 
@@ -80,7 +99,7 @@ python main.py --rounds=25 \
 You can download VehicleDataset [here](https://www.kaggle.com/datasets/shamate2b/vehicledataset). 
 
 ## Hyperparameters
-If you try a setting different from our paper, please tune the hyperparameters of FedPH. You may tune mu and ld from \{0.001, 0.01, 0.1, 1, 5, 10\}. If you have sufficient computing resources, you may also tune temperature from \{0.1, 0.5, 1.0\}. 
+If you try a setting different from our paper, please tune the hyperparameters of FedPH. You may tune mu and ld from {0.001, 0.01, 0.1, 1, 5, 10}. If you have sufficient computing resources, you may also tune temperature from {0.1, 0.5, 1.0}. 
 
 
 
