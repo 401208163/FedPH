@@ -14,52 +14,58 @@ This is the code for paper [FedPH: Privacy-enhanced Heterogeneous Federated Lear
 
 | Parameter                      | Description                                 |
 | ----------------------------- | ---------------------------------------- |
-| `model`                     | The model architecture. Options: `simple-cnn`, `resnet50` .|
-| `alg` | The training algorithm. Options: `moon`, `fedavg`, `fedprox`, `local_training` |
-| `dataset`      | Dataset to use. Options: `cifar10`. `cifar100`, `tinyimagenet`|
-| `lr` | Learning rate. |
-| `batch-size` | Batch size. |
-| `epochs` | Number of local epochs. |
-| `n_parties` | Number of parties. |
-| `sample_fraction` | the fraction of parties to be sampled in each round. |
-| `comm_round`    | Number of communication rounds. |
-| `partition` | The partition approach. Options: `noniid`, `iid`. |
-| `beta` | The concentration parameter of the Dirichlet distribution for non-IID partition. |
-| `mu` | The parameter for MOON and FedProx. |
-| `temperature` | The temperature parameter for MOON. |
-| `out_dim` | The output dimension of the projection head. |
-| `datadir` | The path of the dataset. |
-| `logdir` | The path to store the logs. |
-| `device` | Specify the device to run the program. |
-| `seed` | The initial seed. |
+| `rounds`                     | number of rounds of training.|
+| `num_users` | number of users.|
+| `alg`      | algorithms. Options: `fedph`, `fedavg`, `fedprox`,` fedproto`, `local`.|
+| `train_ep` | the number of local episodes.|
+| `local_bs` | local batch size.|
+| `lr` | learning rate.|
+| `momentum` | SGD momentum.|
+| `weight_decay` | Adam weight decay.|
+| `optimizer`    | optimizer. Options: `SGD`, `Adam`.|
+| `num_bb` | number of backbone.|
+| `train_size` | proportion of training dataset.|
+| `num_classes` | number of classes. |
+| `alpha` | parameters of probability distribution.|
+| `non_iid` | non-iid. Options:`0(feature shift)`,`1(label shift)`,`2(feature shift and label shift)`.|
+| `ld` | hyperparameter of fedproto and fedph.|
+| `mu` | hyperparameter of fedprox.|
+| `is_not_the` | multi-key encryption scheme.`0 (is not enabled)`, `1 (is enabled)`.|
+| `add_noise_proto` | differential privacy. `0 (is not enabled)`, `1 (is enabled)`.|
+| `scale` | noise distribution std.|
+| `noise_type` | noise type.|
 
 
 ## Usage
 
-Here is an example to run MOON on CIFAR-10 with a simple CNN:
+Here is an example to run FedPH on VehicleDataset:
 ```
-python main.py --model=simple-cnn \
-    --alg=FedPH \
-    --lr=0.01 \
-    --mu=5 \
-    --epochs=10 \
-    --comm_round=100 \
-    --n_parties=10 \
-    --partition=noniid \
-    --beta=0.5 \
-    --logdir='./logs/' \
-    --datadir='./data/' \
+python main.py --rounds=25 \
+    --num_users=5 \
+    --alg=fedph \
+    --local_bs=32 \
+    --train_size=0.9 \
+    --non_iid=2 \
+    --is_not_the=1 \
+    --add_noise_proto=1 \
 ```
 
 ## Tiny-VehicleDataset
-You can download Tiny-VehicleDataset [here](https://www.kaggle.com/datasets/shamate2b/vehicledataset). 
+You can download VehicleDataset [here](https://www.kaggle.com/datasets/shamate2b/vehicledataset). 
 
 ## Hyperparameters
-If you use the same setting as our papers, you can simply adopt the hyperparameters reported in our paper. If you try a setting different from our paper, please tune the hyperparameters of MOON. You may tune mu from \{0.001, 0.01, 0.1, 1, 5, 10\}. If you have sufficient computing resources, you may also tune temperature from \{0.1, 0.5, 1.0\} and the output dimension of projection head from \{64, 128, 256\}. 
+If you try a setting different from our paper, please tune the hyperparameters of FedPH. You may tune mu and ld from \{0.001, 0.01, 0.1, 1, 5, 10\}. If you have sufficient computing resources, you may also tune temperature from \{0.1, 0.5, 1.0\}. 
 
 
 
 ## Citation
 
 Please cite our paper if you find this code useful for your research.
-
+```latex
+@article{hangdong2023fedhp,
+  title={FedPH: Privacy-enhanced Heterogeneous Federated Learning},
+  author={Hangdong, Kuang and Bo, Mi},
+  journal={arXiv preprint arXiv:2301.11705},
+  year={2023}
+}
+```
